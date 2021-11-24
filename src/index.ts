@@ -14,10 +14,10 @@ const randomTrees = (max_X: number, max_Y: number, quantity: number) => {
     const results: any[] = []
 
     while (results.length < quantity) {
-        const x = new BigNumber('0x' + random_bytes.toString()).mod(max_X).toString()
+        const x = new BigNumber('0x' + random_bytes.toString()).mod(max_X).toNumber()
         random_bytes = sha256(random_bytes)
 
-        const y = new BigNumber('0x' + random_bytes.toString()).mod(max_Y).toString()
+        const y = new BigNumber('0x' + random_bytes.toString()).mod(max_Y).toNumber()
         random_bytes = sha256(random_bytes)
 
         console.log(x, y);
@@ -33,7 +33,20 @@ const randomTrees = (max_X: number, max_Y: number, quantity: number) => {
 }
 
 const normalizeTrees = (trees: any[]) => {
-    const array_x: any[] = []
+    const arr = trees.map((tree, index) => {
+        return {
+            index,
+            value: tree.x * 10000 + tree.y
+        }
+    })
+
+    console.log('arr', arr);
+
+    arr.sort((a, b) => a.value - b.value)
+
+    console.log('arr', arr);
+
+    return arr.map(item => trees[item.index])
 }
 
 const generateMarkleRoot = (trees: any[]) => {
@@ -44,8 +57,8 @@ const generateMarkleRoot = (trees: any[]) => {
     return merkle_tree.getHexRoot()
 }
 
-const trees = randomTrees(1024, 1024, 32)
-const root = generateMarkleRoot(trees)
-
-console.log({ root });
+const trees = normalizeTrees(randomTrees(256, 256, 100))
+console.log(trees);
+// const root = generateMarkleRoot(trees)
+// console.log({ root });
 
