@@ -1,24 +1,51 @@
 import MerkleTree from "merkletreejs";
-import { createHash } from "crypto";
-
+import BigNumber from "bignumber.js";
+import { createHash, randomBytes } from "crypto";
 
 function sha256(data) {
-    // returns Buffer
-    return createHash('sha256').update(data).digest()
+    return createHash('sha256').update(data).digest('hex').toString()
 }
 
-const raw = ['a', 'b', 'c', 'd']
+const randomTrees = (max_X: number, max_Y: number, quantity: number) => {
+    let random_bytes = randomBytes(256).toString('hex')
+    console.log('random_bytes', random_bytes);
+    console.log('random_bytes', random_bytes.toString());
 
-const leaves = raw.map(x => sha256(x))
+    const results: any[] = []
 
-const tree = new MerkleTree(leaves, sha256)
+    while (results.length < quantity) {
+        const x = new BigNumber('0x' + random_bytes.toString()).mod(max_X).toString()
+        random_bytes = sha256(random_bytes)
 
-tree.print()
+        const y = new BigNumber('0x' + random_bytes.toString()).mod(max_Y).toString()
+        random_bytes = sha256(random_bytes)
 
-console.log(tree.getHexRoot())
+        console.log(x, y);
 
-tree.verify(raw, 'a', tree.getHexRoot())
+        if (results.find(item => item.x === x && item.y === y)) continue
 
-// console.log('tree', tree);
-// console.log('print', tree.print());
-// console.log('toString', tree.toString());
+        results.push({ x, y })
+    }
+
+    console.log('results', results);
+
+    return results
+}
+
+const normalizeTrees = (trees: any[]) => {
+    const array_x: any[] = []
+}
+
+const generateMarkleRoot = (trees: any[]) => {
+    const merkle_tree = new MerkleTree(trees.map(tree => sha256(JSON.stringify(tree))))
+
+    merkle_tree.print()
+
+    return merkle_tree.getHexRoot()
+}
+
+const trees = randomTrees(1024, 1024, 32)
+const root = generateMarkleRoot(trees)
+
+console.log({ root });
+
