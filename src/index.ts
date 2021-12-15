@@ -2,25 +2,27 @@ import MerkleTree from "merkletreejs";
 import BigNumber from "bignumber.js";
 import { createHash, randomBytes } from "crypto";
 
-function sha256(data) {
-    return createHash('sha256').update(data).digest('hex').toString()
+function sha256(data: string): string {
+    return createHash('sha256').update(data).digest().toString('hex')
 }
 
 const randomTrees = (max_X: number, max_Y: number, quantity: number) => {
-    let random_bytes = randomBytes(256).toString('hex')
-    console.log('random_bytes', random_bytes);
-    console.log('random_bytes', random_bytes.toString());
+    const random_bytes = randomBytes(32)
+
+    let random_bytes_hex = random_bytes.toString('hex')
+
+    console.log('random_bytes_hex', random_bytes_hex);
+    console.log('random_bytes_hex hashed', sha256(random_bytes_hex));
+    
 
     const results: any[] = []
 
     while (results.length < quantity) {
-        const x = new BigNumber('0x' + random_bytes.toString()).mod(max_X).toNumber()
-        random_bytes = sha256(random_bytes)
+        const x = new BigNumber('0x' + random_bytes_hex).mod(max_X).toNumber()
+        random_bytes_hex = sha256(random_bytes_hex)
 
-        const y = new BigNumber('0x' + random_bytes.toString()).mod(max_Y).toNumber()
-        random_bytes = sha256(random_bytes)
-
-        console.log(x, y);
+        const y = new BigNumber('0x' + random_bytes_hex).mod(max_Y).toNumber()
+        random_bytes_hex = sha256(random_bytes_hex)
 
         if (results.find(item => item.x === x && item.y === y)) continue
 
@@ -29,24 +31,16 @@ const randomTrees = (max_X: number, max_Y: number, quantity: number) => {
 
     console.log('results', results);
 
-    return results
-}
-
-const normalizeTrees = (trees: any[]) => {
-    const arr = trees.map((tree, index) => {
+    const arr = results.map((item, index) => {
         return {
             index,
-            value: tree.x * 10000 + tree.y
+            value: item.x * max_X + item.y
         }
     })
 
-    console.log('arr', arr);
-
     arr.sort((a, b) => a.value - b.value)
 
-    console.log('arr', arr);
-
-    return arr.map(item => trees[item.index])
+    return arr.map(item => results[item.index])
 }
 
 const generateMarkleRoot = (trees: any[]) => {
@@ -57,8 +51,8 @@ const generateMarkleRoot = (trees: any[]) => {
     return merkle_tree.getHexRoot()
 }
 
-const trees = normalizeTrees(randomTrees(256, 256, 100))
+const trees = randomTrees(256, 256, 100)
 console.log(trees);
-// const root = generateMarkleRoot(trees)
-// console.log({ root });
+const root = generateMarkleRoot(trees)
+console.log({ root });
 
