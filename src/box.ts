@@ -14,8 +14,8 @@ const hmac_enc_parse = HmacSHA256(enc_parse, key).toString(enc.Hex)
 //     hmac_enc_parse
 // })
 
-const seedGenerator = (address: string, buybox_blockHash: string, unbox_blockhash: string, tokenId: number): string => {
-    const hmac = HmacSHA256(`${address}:${buybox_blockHash}:${unbox_blockhash}`, tokenId.toString());
+const seedGenerator = (address: string, buybox_blockHash: string, unbox_blockhash: string, tokenId: number, n: number = 0): string => {
+    const hmac = HmacSHA256(`${address}:${buybox_blockHash}:${unbox_blockhash}:${tokenId}`, n.toString());
     // const hmac = HmacSHA256(enc.Hex.parse(address), txid);
     return hmac.toString(enc.Hex);
 }
@@ -57,6 +57,8 @@ const rollNumbers = (hashed: string, numbers: number, possible: number): number[
 
 const getDiceResult = (direction: number, hashed: string): number => direction === 0 ? rollNumbers(hashed, 1, 100)[0] : 99 - rollNumbers(hashed, 1, 100)[0]
 
+const getBoxResult = (seed: string): number => new Decimal(`0x` + seed).mod(100).toNumber()
+
 export { seedGenerator, getDiceResult }
 
 // const seed = seedGenerator('0x4E96AcF083AEbfA32b49C1FE04B8Be70C98EA2C2', '0x94eb22f5266d9ae816ce4d64af5a0267a59bbf3ca80856b22199f82b032d6429', '0x9cc4edf72cbff7c1edab185bcdbb4957a7d3a1b9e48ef57c8385496763f462bb', 100)
@@ -69,10 +71,10 @@ export { seedGenerator, getDiceResult }
 
 const results = {}
 
-for (let i = 0; i < 100000; i++) {
+for (let i = 0; i < 1000000; i++) {
     const seed = seedGenerator('0x4E96AcF083AEbfA32b49C1FE04B8Be70C98EA2C2', '0x94eb22f5266d9ae816ce4d64af5a0267a59bbf3ca80856b22199f82b032d6429', '0x9cc4edf72cbff7c1edab185bcdbb4957a7d3a1b9e48ef57c8385496763f462bb', i)
 
-    const result = getDiceResult(0, seed)
+    const result = getBoxResult(seed)
 
     console.log(i, seed, result);
 
