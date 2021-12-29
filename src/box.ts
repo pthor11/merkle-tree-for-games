@@ -62,7 +62,7 @@ const getDiceResult = (direction: number, hashed: string): number => direction =
 const getBoxResult = (seed: string): number => new Decimal(`0x` + seed).mod(100).toNumber()
 
 
-export { seedGenerator, getDiceResult }
+// export { seedGenerator, getDiceResult }
 
 // const seed = seedGenerator('0x4E96AcF083AEbfA32b49C1FE04B8Be70C98EA2C2', '0x94eb22f5266d9ae816ce4d64af5a0267a59bbf3ca80856b22199f82b032d6429', '0x9cc4edf72cbff7c1edab185bcdbb4957a7d3a1b9e48ef57c8385496763f462bb', 100)
 
@@ -80,7 +80,6 @@ const getBoxResults = (address: string, buybox_blockHash: string, unbox_blockhas
     let i = 0
     let n = 0
 
-    const quantity_min = 1
     const quantity_max = box_type === 0 ? 50 : (box_type === 1 ? 70 : 100)
 
     while (i >= 0 && i <= 2) {
@@ -102,7 +101,9 @@ const getBoxResults = (address: string, buybox_blockHash: string, unbox_blockhas
 
         n = n === 0 ? 1 : n
 
-        const rune_type = new Decimal(`0x` + seed).mod(1000000).toNumber()
+        results.push(n)
+
+        // const rune_type = new Decimal(`0x` + seed).mod(1000000).toNumber()
 
         /* 
         1-1.000.000 
@@ -118,7 +119,7 @@ const getBoxResults = (address: string, buybox_blockHash: string, unbox_blockhas
         100.001-200.000 => Stone 
         200.001-1.000.000 => Soi
         */
-
+/* 
         let rune: number | undefined = undefined
 
         if (rune_type === 1) {
@@ -147,7 +148,7 @@ const getBoxResults = (address: string, buybox_blockHash: string, unbox_blockhas
             rune = 0
         }
 
-        runes[rune] = runes[rune] !== undefined ? runes[rune] + 1 : 0
+        runes[rune] = runes[rune] !== undefined ? runes[rune] + 1 : 0 */
 
         // const rune_type = Math.floor(Math.log(11 - new Decimal(`0x` + seed).mod(11).toNumber()) * 10)
         // const rune_type = Math.log(11 - new Decimal(`0x` + seed).mod(11).toNumber())
@@ -155,11 +156,11 @@ const getBoxResults = (address: string, buybox_blockHash: string, unbox_blockhas
 
         // runes[rune_type] = runes[rune_type] !== undefined ? runes[rune_type] + 1 : 0
 
-        console.log({ seed, max_mod, n, rune_type });
+/*         console.log({ seed, max_mod, n, rune_type });
 
         results.push(n)
 
-        i += 1
+        i += 1 */
     }
 
     return results

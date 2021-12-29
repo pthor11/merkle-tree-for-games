@@ -39,6 +39,7 @@
     "decimal.js": "^10.3.1",
     "decimal.js-light": "^2.5.1",
     "dotenv": "^10.0.0",
+    "ethereumjs-wallet": "^1.0.2",
     "graphql": "^15.5.1",
     "ioredis": "^4.27.7",
     "kafkajs": "^1.15.0",
