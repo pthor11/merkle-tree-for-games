@@ -7,20 +7,9 @@ import { getTime } from "./util"
 
 console.log(getTime, `INIT`)
 
-const normalize_airdrop_data = (address: string, amount: string) => `${address},${amount}`
-
 const start = async () => {
     try {
         console.log(getTime, `START`)
-
-        // for (let index = 0; index < data.length; index++) {
-        //     const airdrop = data[index]
-        //     const airdrop_data = normalize_airdrop_data(airdrop.address, airdrop.amount)
-
-        //     console.log(airdrop_data);
-        // }
-
-        // const airdrops = data.map(airdrop => normalize_airdrop_data(airdrop.address, airdrop.amount))
 
         const addresses: string[] = []
 
@@ -46,7 +35,6 @@ const start = async () => {
         console.log({ leaf });
 
         const proof = merkle_tree.getProof(leaf)
-        // const proof = merkle_tree.getHexProof(leaf)
 
         console.log({ proof: merkle_tree.getHexProof(leaf) });
 
