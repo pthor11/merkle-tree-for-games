@@ -48,6 +48,8 @@
     "merkletreejs": "^0.2.24",
     "mongodb": "^4.1.0",
     "tronweb": "^4.0.0",
-    "web3-eth-abi": "^1.5.2"
+    "web3": "^1.6.1",
+    "web3-eth-abi": "^1.5.2",
+    "web3-utils": "^1.6.1"
   }
 }
